@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  mysql:
+    image: mysql:8.0.43
+    restart: always
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: MySQL@2022
+      MYSQL_DATABASE: spring_db
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demo
+    ports:
+      - "3306:3306"     # optional expose to host
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 15s
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Optional: force platform if you're on ARM64 Windows running AMD64 images:
+      # args: []
+    container_name: spring-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_NAME: spring_db
+      DB_USER: root
+      DB_PASSWORD: MySQL@2022
+      # Optional JVM tuning:
+      # JAVA_OPTS: "-Xms256m -Xmx512m"
+    ports:
+      - "8080:8080"
+    # If you need the container to restart automatically:
+    # restart: unless-stopped
+
+volumes:
+  db_data:
