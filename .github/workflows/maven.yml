@@ -31,13 +31,24 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-          - name: Wait for MySQL
-              run: |
-                sudo apt-get install -y mysql-client
-                until mysql -h127.0.0.1 -P3306 -uroot -pMySQL@2022 -e "SELECT 1"; do
-                  echo "Waiting for MySQL..."
-                  sleep 5
-                done
+    - name: Wait for MySQL
+      run: |
+        sudo apt-get install -y mysql-client
+        for i in {1..12}; do
+          if mysql -h127.0.0.1 -P3306 -uroot -pMySQL@2022 -e "SELECT 1"; then
+            echo "MySQL is up!"
+            exit 0
+          fi
+          echo "Waiting for MySQL... ($i/12)"
+          sleep 5
+        done
+        echo "MySQL failed to start in time"
+        exit 1
+    - name: Show MySQL logs
+      if: failure()
+      run: |
+        docker ps -a
+        docker logs $(docker ps -q --filter "ancestor=mysql:8.0.32")
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
