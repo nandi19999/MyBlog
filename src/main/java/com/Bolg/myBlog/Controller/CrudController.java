@@ -38,5 +38,4 @@ public class CrudController {
         blogRepo.save(blog);
         return ResponseEntity.ok(HttpStatus.OK);
     }
-    //This is to check if ci cd working properly
 }
