@@ -1,10 +1,5 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+# This workflow will build a Spring project with mysql dependency with Maven,
+# and cache/restore any dependencies to improve the workflow execution time
 
 name: Java CI with Maven
 
@@ -19,6 +14,15 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0.32
+        env:
+          MYSQL_ROOT_PASSWORD: MySQL@2022
+          MYSQL_DATABASE: spring_db
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: testpass
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 17
@@ -27,6 +31,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+          - name: Wait for MySQL
+              run: |
+                sudo apt-get install -y mysql-client
+                until mysql -h127.0.0.1 -P3306 -uroot -pMySQL@2022 -e "SELECT 1"; do
+                  echo "Waiting for MySQL..."
+                  sleep 5
+                done
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
