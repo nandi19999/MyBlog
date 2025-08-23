@@ -32,13 +32,13 @@ jobs:
       - name: Retag MyApp and MySQL
         run:
           docker tag myblog-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/myblog-app:latest
-          #docker tag mysql:8.0.32 ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.32
+          docker tag mysql:8.0.32 ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.32
       # Push your app image
       - name: Push MyApp image
         run: |
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/myblog-app:latest
 
       # Push MySQL image (only if you modified Dockerfile, otherwise use official mysql:8.0)
-#      - name: Push MySQL image
-#        run: |
-#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.32
+      - name: Push MySQL image
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.32
