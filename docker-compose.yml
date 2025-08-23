@@ -31,7 +31,7 @@ services:
       mysql:
         condition: service_healthy
     environment:
-      SPRING_PROFILES_ACTIVE: default
+      SPRING_PROFILES_ACTIVE: docker
       DB_NAME: spring_db
       DB_USER: root
       DB_PASSWORD: MySQL@2022
