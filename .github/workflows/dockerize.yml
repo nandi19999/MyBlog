@@ -25,6 +25,9 @@ jobs:
       - name: Build Docker images
         run: |
           docker compose -f docker-compose.yml build
+      #List docker images
+      - name: List docker images
+        run: docker images
       #Re-Tag Myapp and mysql
       - name: Retag MyApp and MySQL
         run: |
