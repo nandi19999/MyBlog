@@ -22,9 +22,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # Build images using docker-compose
-      - name: Build Docker images
+      - name: Build and Pull Docker images
         run: |
           docker compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml pull
       #List docker images
       - name: List docker images
         run: docker images
