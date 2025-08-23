@@ -33,7 +33,7 @@ jobs:
       - name: Retag MyApp and MySQL
         run:
           docker tag myblog-app:latest ${{ secrets.DOCKERHUB_USERNAME }}/myblog-app:latest
-          docker tag mysql:8.0.32 ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.43
+          docker tag mysql:8.0.43 ${{ secrets.DOCKERHUB_USERNAME }}/mysql:8.0.43
       # Push your app image
       - name: Push MyApp image
         run: |
